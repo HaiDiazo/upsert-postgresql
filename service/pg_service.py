@@ -31,20 +31,16 @@ class PgService:
         return result
 
     def upsert(self):
-        try:
-            connect = self._open_connection()
-            cursor = connect.cursor()
-            query_upsert = f"""
-                INSERT INTO {self.__table} ({",".join([field for field in self.__data])}) VALUES ({",".join(["%s" for _ in self.__data])})
-                ON CONFLICT ({self.__primary_field}) 
-                DO 
-                UPDATE SET {self.generate_update_values(data=self.__data)};
-            """
-            param = tuple([value for _, value in self._value_map().items()])
-            cursor.execute(query_upsert, param)
+        connect = self._open_connection()
+        cursor = connect.cursor()
+        query_upsert = f"""
+            INSERT INTO {self.__table} ({",".join([field for field in self.__data])}) VALUES ({",".join(["%s" for _ in self.__data])})
+            ON CONFLICT ({self.__primary_field}) 
+            DO 
+            UPDATE SET {self.generate_update_values(data=self.__data)};
+        """
+        param = tuple([value for _, value in self._value_map().items()])
+        cursor.execute(query_upsert, param)
 
-            connect.commit()
-            print(f"Data upsert into table {self.__table}")
-        except Exception as e:
-            traceback.print_exc()
-            raise e
+        connect.commit()
+        # print(f"Data upsert into table {self.__table}")
