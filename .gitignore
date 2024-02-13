@@ -1,0 +1,4 @@
+.idea
+.env
+smm_raw.json
+**/__pycache__
