@@ -20,7 +20,16 @@ if __name__ == "__main__":
 
         if 'properties' in value:
             results.append(f"{key} json")
-    query = f"CREATE TABLE tb_posts ({', '.join(result for result in results)});"
+    query = f"CREATE TABLE tb_posts ({', '.join(f'{result}' for result in results)});"
     print(query)
+
+    list_user_id = ["123", "321", "456"]
+    query = f"""
+        UPDATE tb_users 
+        SET tendency_process = true
+        WHERE user_id IN ({",".join(user_id for user_id in list_user_id)})
+    """
+    print(query)
+
 
 
